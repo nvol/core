@@ -30,9 +30,6 @@ class Sender:
             return None
 
         if self._more_verbose:
-            log.info('%s: Sending packet %s' %\
-                     (self._port, brepr(packet)))
-        else:
             log.debug('%s: Sending packet %s' %\
                      (self._port, brepr(packet)))
         '''
@@ -73,14 +70,16 @@ class Sender:
             try:
                 sleep(0.001)
                 if (time() - start_timeout) > total_timeout:
-                    log.debug('%s: 1) first bytes timeout!' % self._port)
+                    if self._more_verbose:
+                        log.debug('%s: 1) first bytes timeout!' % self._port)
                     break
                 if self.conn.inWaiting():
                     start_timeout = time()
                     raw = raw + \
                       self.conn.read(self.conn.inWaiting())
-                    log.debug('%s: 1) got first bytes: %s' %\
-                              (self._port, raw))
+                    if self._more_verbose:
+                        log.debug('%s: 1) got first bytes: %s' %\
+                                  (self._port, raw))
                     break # first bytes received
             except Exception as e:
                 #@@@ self._connLock.release()
@@ -94,8 +93,9 @@ class Sender:
             try:
                 sleep(0.001)
                 if (time() - start_timeout) > idle_timeout:
-                    log.debug('%s: 2) idle timeout, got bytes: %s' %\
-                              (str(self._port), str(raw)))
+                    if self._more_verbose:
+                        log.debug('%s: 2) idle timeout, got bytes: %s' %\
+                                  (str(self._port), str(raw)))
                     break
                 if self.conn.inWaiting():
                     start_timeout = time()

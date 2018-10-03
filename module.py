@@ -347,7 +347,7 @@ class Module(object):
             log.warning('request [%s] cannot be served '\
               'because of the previous [%s] request is still active' %
               (rq, self._request))
-            self.update_status('failed previous request is active')
+            ###@@@ self.update_status('failed previous request is active')
             return False
         sts = self._status
         for appr_sts in appropriate_statuses:
